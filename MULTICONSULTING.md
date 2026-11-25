@@ -1,0 +1,5 @@
+# MULTICONSULTING
+
+Use the native GitHub connector for repository work when possible. For remote work choose an authorized connector by destination, capability, availability, quota and concurrency. Prefer native specialized operations where required. Batch independent compatible checks into one bounded script when allowed; never bypass consent, quotas, allowlists or security policy. Separate risky modifications from inspection and verification. Use explicit target paths, timeouts, concise outputs and synthetic tests; avoid logging secrets. On uncertain writes, verify before retrying. Use native asynchronous jobs when appropriate and recover results by job ID. Avoid polling loops. Shared account quotas and cross-chat concurrency must not be assumed independent. No agent may access another project's private files without explicit authorization. Escalate only to FER for administration or policy changes.
+
+Connector-specific credentials and host details belong outside this public repository. No automatic fallback to a different host or identity. Work/Codex are auditors, not the routine orchestrator.
