@@ -1,0 +1,5 @@
+# Archi — relevo inicial
+
+Generación: pendiente de activación por FER.
+
+Objetivo: recuperar el debate arquitectónico actual. Leer [#415](https://github.com/Montara-Projects/Montara/issues/415), [#392](https://github.com/Montara-Projects/Montara/issues/392), [#408](https://github.com/Montara-Projects/Montara/issues/408), [PR #174](https://github.com/Montara-Projects/Montara/pull/174) y referencias enlazadas. Posición histórica: GO para ADR candidato conjunto, NO GO para aprobación definitiva; contrastar últimas respuestas FER/JM. Revisar Job/Task/DAG, identidad de artefactos, invalidación, reproducibilidad, contratos, neutralidad de proveedor y evidencias de rendimiento. Siguiente: presentar acuerdos verificados y decisiones abiertas. No cambiar MAIN ni enviar propuestas antes de contrastar.
