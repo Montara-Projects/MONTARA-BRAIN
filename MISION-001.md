@@ -28,3 +28,6 @@ Verificados los cinco informes en [BRAIN #1](https://github.com/Montara-Projects
 
 ## Checkpoint de auditoría independiente
 Work-001 emitió GO arquitectónico, cero bloqueantes, cuatro hallazgos necesarios y uno diferible. Véase [síntesis del dictamen](audits/WORK-001-MISION-001.md). Revisión interna y externa concluidas; no repetir sin evidencia material. Pendiente respuesta FER a JM, doble ACK y autorización separada de recursos e implementación. Alfred-001 será asistente de coordinación de FER; [relevo](agents/alfred/HANDOVER.md). No se ha enviado respuesta a JM ni autorizado desarrollo.
+
+## Checkpoint — ACK de FER publicado
+FER autorizó y publicó su [ACK arquitectónico y propuesta de nueva etapa CORE V2](https://github.com/Montara-Projects/Montara/issues/415#issuecomment-7150570278). Pendiente confirmación final JM y acuerdo de reparto V1/V2. El mensaje ratifica roadmap V2 independiente, reutilización selectiva, neutralidad de proveedores, prueba futura de portabilidad y elección conjunta de repositorio/entorno/alcance/recursos/presupuesto. No autoriza implementación, compras, despliegues ni migración MAIN. Alfred-001 asume coordinación posterior con FER; no repetir revisión arquitectónica sin evidencia material.
