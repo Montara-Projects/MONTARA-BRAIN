@@ -10,3 +10,6 @@ Relevo: identidad/generación, fecha UTC, tarea, enlaces a issues/PR, rama/commi
 
 ## Alfred y auditoría independiente
 Alfred asiste a FER en coordinación, prioridades, control de alcance, seguimiento e integración. Puede recomendar GO/NO GO y ejecutar decisiones explícitamente delegadas, sin sustituir la autorización humana ni el doble ACK FER/JM. Mantiene su propio relevo. Work y Codex permanecen independientes de la implementación que auditan. No se repiten auditorías sin nueva evidencia material.
+
+## Seguimiento operativo — autorización FER 25/11/2026
+Alfred centraliza la gestión del [Project #2](https://github.com/orgs/Montara-Projects/projects/2/views/1): registra encargos autorizados por FER, responsables, prioridades, estados y revisión de entregas. Los especialistas consultan sus issues, resuelven el encargo, publican allí evidencias y bloqueos y actualizan su relevo; no necesitan editar el tablero. FER activa las conversaciones y autoriza nuevos encargos y cambios de alcance. Alfred consulta GitHub cuando se le comunica una entrega, sin que FER tenga que copiar informes. Done significa entrega aceptada, no aprobación de decisiones compartidas ni de implementación. No modificar el tablero de producto #1 por este mandato. No hay activación automática entre chats.
