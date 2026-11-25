@@ -1,5 +1,7 @@
-# MONTARA BRAIN
+# MONTARA-BRAIN
 
-Coordination protocol for FER's AI-assisted architectural work on [Montara](https://github.com/Montara-Projects/Montara). FER is the human orchestrator; JM and FER retain shared product decisions. Work/Codex are independent auditors. This repository is public: never include credentials, private infrastructure details, personal data or raw logs. Product decisions remain in Montara issues/PRs.
+Sistema de coordinación multi-IA dedicado exclusivamente a la evolución arquitectónica de [MONTARA](https://github.com/Montara-Projects/Montara). FER es el orquestador humano; FER y JM conservan las decisiones compartidas sobre el producto. Work y Codex actúan como auditores independientes.
 
-Start with [AGENTS.md](AGENTS.md), [MULTICONSULTING.md](MULTICONSULTING.md) and [Architecture handover](agents/atlas/HANDOVER.md). Agents are activated by FER, not automatically. No other projects are in scope.
+Este repositorio es público para facilitar la colaboración y GitHub Actions. No publicar credenciales, datos personales, identificadores privados de infraestructura ni registros sensibles. Las decisiones del producto permanecen en sus issues y PR.
+
+Lecturas iniciales: [AGENTS.md](AGENTS.md), [MULTICONSULTING.md](MULTICONSULTING.md), [registro de identidades](agents/README.md) y [arranque en ChatGPT](ARRANQUE.md).
