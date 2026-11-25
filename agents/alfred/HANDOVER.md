@@ -1,6 +1,6 @@
 # Alfred — relevo de coordinación
 
-Generación: Alfred-001, pendiente de arranque por FER. Fecha: 2026-11-25.
+Generación: Alfred-001, activada por FER. Fecha: 2026-11-25.
 Rol: mano derecha de FER y coordinador operativo/integración, no propietario ni auditor independiente. FER es orquestador humano; FER/JM conservan decisiones compartidas. Alfred recomienda GO/NO GO y ejecuta autorizaciones delegadas con alcance explícito; no se otorga permisos ni sustituye ACK humanos.
 
 ## Lecturas
@@ -16,3 +16,6 @@ Archi contratos; Efrain infraestructura/release; Eugenia Engine/Mixer/Colibrí; 
 
 ## Conectores y pendientes
 GitHub directo para repos/issues/PR y workflows; gh autorizado existente para Projects (escritura workflow por CLI falló, conector GitHub funcionó). BRAIN Actions validación estructural funcionó 2/2 en prueba inicial. DC respaldo, MCPENROUZ terminal persistente, SentinelX scripts/jobs asíncronos, EXZA archivos durante sesión autorizada; nuevos conectores laboratorio, verificar destino/permisos/cuotas antes de trabajo real. No duplicar credenciales ni usar otros proyectos. Concurrencia, cuotas efectivas y persistencia EXZA a largo plazo pendientes; no bloquean revisión documental. Cuenta fer-testing GCP eliminada y verificada, archivos ajenos con UID coincidente preservados. Limpieza de laboratorio restante no urgente. No publicar detalles sensibles.
+
+## Checkpoint de arranque Alfred-001 — 2026-11-25
+Verificados protocolo, cinco relevos e informes BRAIN #1, síntesis Work, Montara #415 y cinco rondas (último candidato JM sin ACK final FER), #392, #293, PR #408 (OPEN/DRAFT), PR #174 (MERGED documental) y estudio híbrido 12/11. Git main Montara `7113fd2801558cc31bf9b2c1bfab360c7faa40ca`; BRAIN previo `35fe7cd45c2efca79a4a96742bcfcf7483022490`. No equivalen a runtime. Búsqueda de ramas `core` sin coincidencias, no rama reservada. Projects consultados por gh: producto #1 114 ítems (39 Done, 47 In Progress, 28 Todo), #293 JM/Todo, #392 Joint/In Progress, #408 Joint/Todo; #415 no localizado en los ítems devueltos. BRAIN #2 un ítem #1 Todo. No alterar tableros hasta aprobación de reparto/encargo. DC reportó 92% de cuota antes de segunda consulta; reservarlo. Otros conectores disponibles sin comprobar sesiones/destinos. Propuesta: cerrar ADR por doble ACK, JM lidera V1/P0/Push/Show compatibles y criterios de producto; FER/BRAIN V2 aislado; cinco paquetes coordinados, Archi contrato e interfaces, Efrain inventario y paquete, Eugenia reutilización motor y ejecución, Quasimodo fixture/gates, Compi contribución al contrato y gate desktop posterior. Pendiente aprobación de texto de respuesta #415, alcance/entorno/presupuesto y encargos. No se ha publicado en producto ni creado ramas, asignaciones, infraestructura o compras.
