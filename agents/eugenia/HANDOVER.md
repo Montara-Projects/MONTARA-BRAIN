@@ -1,5 +1,13 @@
-# Eugenia — relevo inicial
+# Eugenia — relevo operativo
 
-Generación: pendiente de activación por FER.
-Área: Engine, contratos de procesamiento y rendimiento.
-Tarea: ninguna asignada. Leer protocolo común y consultar [debate #415](https://github.com/Montara-Projects/Montara/issues/415) y referencias pertinentes antes de proponer trabajo. No modificar producto hasta recibir asignación. No hay avances propios verificados.
+- Identidad: Eugenia-001, activada por FER. Área: Engine/Mixer, DAG, representaciones y rendimiento.
+- Fecha: 2026-11-25 UTC. Misión: [BRAIN #1](https://github.com/Montara-Projects/MONTARA-BRAIN/issues/1).
+- Dictamen y propuestas: [informe Eugenia-001](https://github.com/Montara-Projects/MONTARA-BRAIN/issues/1#issuecomment-7149425147). ACK técnico, cero bloqueantes; una sola ronda completada. Revisión independiente/doble ACK pendientes; no autorización de implementación.
+- Leídos protocolo, registro, relevo, [#415 íntegro](https://github.com/Montara-Projects/Montara/issues/415), [ADR consolidado JM](https://github.com/Montara-Projects/Montara/issues/415#issuecomment-7141340666), [estudios 12/11](https://github.com/Montara-Projects/Montara/blob/5182974ce28c5d25dc33e4f7cf9ab236167d4bad/docs/integration/PROCESOS_Y_ESTUDIOS_DE_OPTIMIZACION_HIBRIDA_2026-11-12.md) y dictamen Archi-001. Contrastados issues existentes y PR #408 (descripción).
+- HEAD Git Montara main observado: 7113fd2801558cc31bf9b2c1bfab360c7faa40ca. BRAIN main antes de este relevo: d21e8da39ec256ed79fd6e021a65b1329375541b. No equivalen a runtime. Gitlinks Engine/Mixer no legibles con fetch_file; verificar pines exactos antes de trabajar.
+- Propuestas sin asignar: (1) inventario reuse/adapt/rewrite y EngineAdapter/MixerAdapter v0, slice Linux real MP4; (2) catálogo de capacidades/representaciones y perfil DAG secuencial, contribuir al contrato de Archi, no scheduler paralelo; (3) benchmark A/A V1 y A/B V2 reutilizando #265/#386/#321, sin nuevo harness.
+- Dependencias: Archi contratos/ownership; Efrain release/recursos; Compi relink/export local; Quasimodo QA; JM receta, fixtures y calidad; FER asignación y alcance. Reusar #302/#271/#369/#155/#251/#368/#293/#348/#316, no duplicar tickets.
+- Diferido: GOP WAN, ML/ASDMR, librerías externas de orquestación/interoperabilidad, distribución render y tuning no justificado. SATURNO controlado no acredita WAN/velocidad real; objetivo -30% no garantía.
+- Herramientas: GitHub lectura/escritura operativas; SentinelX, MCPENROUZ, EXZA, Desktop Commander, Cloudflare, Runpod disponibles en catálogo, sesiones/cuotas no verificadas. No se ejecutaron tests ni operaciones remotas.
+- Estado: solo documentación BRAIN y comentario de misión. Sin cambios en producto, asignaciones, ramas, worktrees, infraestructura, compras ni MAIN. No se respondió al #415.
+- Siguiente acción: esperar asignación explícita de FER y revisión/doble ACK; si autorizada, verificar referencias/pines y coordinar alcance con especialistas antes de implementar. No abrir otra ronda salvo evidencia material.
