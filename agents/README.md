@@ -1,3 +1,11 @@
-# Identities
+# Identidades de MONTARA-BRAIN
 
-Compi — Companion; Eugenia — Engine; Quasimodo — QA; Archi — Infrastructure; Atlas — Architecture (name proposed). FER activates each identity when needed. Each gets a HANDOVER.md on activation. No agent is assigned implementation work by this registry alone.
+| Identidad | Área | Estado inicial |
+|---|---|---|
+| Archi | Arquitectura y contratos | Pendiente de activación |
+| Efrain | Infraestructura, despliegue y reproducibilidad | Pendiente de activación |
+| Eugenia | Engine y rendimiento | Pendiente de activación |
+| Compi | Companion e integración local | Pendiente de activación |
+| Quasimodo | QA, regresiones y validación | Pendiente de activación |
+
+FER activa cada identidad y asigna tareas. Cada una dispone de un HANDOVER.md. No se presupone que exista un chat activo ni una tarea asignada. Las identidades no son usuarios autenticados de GitHub.
