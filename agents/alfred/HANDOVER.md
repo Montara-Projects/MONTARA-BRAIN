@@ -1,0 +1,18 @@
+# Alfred — relevo de coordinación
+
+Generación: Alfred-001, pendiente de arranque por FER. Fecha: 2026-11-25.
+Rol: mano derecha de FER y coordinador operativo/integración, no propietario ni auditor independiente. FER es orquestador humano; FER/JM conservan decisiones compartidas. Alfred recomienda GO/NO GO y ejecuta autorizaciones delegadas con alcance explícito; no se otorga permisos ni sustituye ACK humanos.
+
+## Lecturas
+README.md, AGENTS.md, MULTICONSULTING.md, ARRANQUE.md, agents/README.md, MISION-001.md, cinco relevos individuales y [BRAIN #1](https://github.com/Montara-Projects/MONTARA-BRAIN/issues/1); [Montara #415](https://github.com/Montara-Projects/Montara/issues/415) íntegro, [ADR candidato JM](https://github.com/Montara-Projects/Montara/issues/415#issuecomment-7141340666), audits/WORK-001-MISION-001.md, Project BRAIN #2 y Project producto #1. Consultar #392, #293, PR #408, PR #174 y estudios enlazados según necesidad. GitHub es fuente de verdad; comprobar novedades antes de actuar.
+
+## Estado
+Cinco especialistas -001 activos, cinco informes/relevos verificados, 5 ACK técnicos, 0 bloqueantes; Work-001 GO arquitectónico sin bloqueantes recibido por FER, síntesis archivada. No repetir auditoría con Codex salvo evidencia nueva. Aún no hay doble ACK final ni autorización de implementación/recursos; no se ha enviado respuesta a JM tras auditoría.
+Siguiente: preparar respuesta breve a JM para aprobación FER, incorporando cuatro hallazgos necesarios Work como tareas, no reabrir arquitectura. Proponer JM lidere mantenimiento MAIN V1 y LAB propios, mejoras compatibles y P0; FER/BRAIN se concentra en V2 aislado y estabiliza metodología, futura incorporación JM consensuada. Coordinar dependencias compartidas sin retirar permisos ni transferir unilateralmente ownership. Acordar alcance, ubicación y presupuesto por separado. Después convertir propuestas en encargos y registrar responsables, ramas, dependencias, criterios y evidencias sin duplicar issues.
+Primer objetivo: slice Linux real login→proyecto→receta→job→MP4→reapertura, cloud off, fixture sintético, aislamiento, sin tocar V1. Companion gate separado; paridad y migración posteriores. Objetivo provisional JM 24/12 no compromiso.
+
+## Método operativo
+Archi contratos; Efrain infraestructura/release; Eugenia Engine/Mixer/Colibrí; Compi Companion; Quasimodo QA. Alfred sintetiza avances, frena sobreingeniería y recomienda prioridades e integración; una revisión por hito y nuevas rondas solo con evidencia material. Antes de merge comprobar autorización, destino, HEAD exacto, CI, pruebas y dependencias; no MAIN/despliegues/compras/permisos sin autorización correspondiente. Mantener relevo por hitos y ~30 intercambios activos. Work/Codex auditan independientemente, no ejecutan lo auditado. No despertar chats ni asumir trabajo en segundo plano.
+
+## Conectores y pendientes
+GitHub directo para repos/issues/PR y workflows; gh autorizado existente para Projects (escritura workflow por CLI falló, conector GitHub funcionó). BRAIN Actions validación estructural funcionó 2/2 en prueba inicial. DC respaldo, MCPENROUZ terminal persistente, SentinelX scripts/jobs asíncronos, EXZA archivos durante sesión autorizada; nuevos conectores laboratorio, verificar destino/permisos/cuotas antes de trabajo real. No duplicar credenciales ni usar otros proyectos. Concurrencia, cuotas efectivas y persistencia EXZA a largo plazo pendientes; no bloquean revisión documental. Cuenta fer-testing GCP eliminada y verificada, archivos ajenos con UID coincidente preservados. Limpieza de laboratorio restante no urgente. No publicar detalles sensibles.
