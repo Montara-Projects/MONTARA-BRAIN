@@ -1,5 +1,13 @@
-# Compi — relevo inicial
+# Compi — relevo operativo
 
-Generación: pendiente de activación por FER.
-Área: Companion, integración local y contratos con Engine.
-Tarea: ninguna asignada. Leer protocolo común y consultar [debate #415](https://github.com/Montara-Projects/Montara/issues/415) y referencias pertinentes antes de proponer trabajo. No modificar producto hasta recibir asignación. No hay avances propios verificados.
+- Identidad: **Compi-001**, activada por FER. Área: Companion Win/Mac, contratos locales, autenticación, aislamiento y calidad.
+- Fecha: 2026-11-25 UTC. Misión: [BRAIN #1](https://github.com/Montara-Projects/MONTARA-BRAIN/issues/1).
+- Registro y dictamen: [Compi-001](https://github.com/Montara-Projects/MONTARA-BRAIN/issues/1#issuecomment-7149661848). ACK técnico, 0 bloqueantes del ADR; una ronda concluida. Revisión independiente y doble ACK pendientes; sin autorización de implementación.
+- Leídos protocolo completo, registro, relevo inicial, [#415](https://github.com/Montara-Projects/Montara/issues/415) (cuerpo y cinco comentarios), [ADR candidato](https://github.com/Montara-Projects/Montara/issues/415#issuecomment-7141340666), dictámenes Archi/Eugenia/Efrain. Contrastados #251/#368 y comentarios completos, #271/#413 (cuerpo), PR #260/#275 (descripción y estado/HEAD), referencias relevantes del estudio híbrido 12/11.
+- Git Montara main observado: 7113fd2801558cc31bf9b2c1bfab360c7faa40ca. BRAIN main antes del relevo: 71ada2b53b8292766a12471c393b782cd90ac335. No equivalen a runtime. PR #260 OPEN/DRAFT HEAD 1b7271db659d7d4a9b495e8ce1e53fb60845198a; PR #275 OPEN/DRAFT HEAD d5f6e3f713b72a7fad7a75b415128b29cb30e35a, base 689cb3e5824a1e7d3050bf15e81e77ae7c4751b8. No extender QA anterior al HEAD actual.
+- Propuestas NECESARIAS sin asignar: (1) contrato local v0, negociación de capacidades/versiones, autorización local acotada y separación de entornos/owners; reusar #368/#271; (2) relink de revisiones de fuentes autorizadas, render HQ original local, cero bytes originales transferidos sin consentimiento; (3) publicación Exports recuperable, no-overwrite, confinamiento, retry/journal/fencing y paridad Win/Mac, reusar #251/#260/#275 con coordinación JM/FER. Aceptación y dependencias en informe enlazado. No bloquean primer slice Linux real; gate Companion separado.
+- Límites de evidencia: Windows E2E histórico de fuentes pequeñas/proxy no prueba HQ original; Mac QA sintética no equivale a sesión humana ni release compartido. Sin pruebas nuevas de runtime.
+- Dependencias: Archi dominio y contrato transaccional; Eugenia motor/representaciones; Efrain release/rollback; Quasimodo QA; FER Windows y asignación; JM Mac/UX/receta. Evitar duplicar arquitectura/scheduler/packaging.
+- Diferido: móvil/cloud real, GOP WAN, scheduler avanzado y paridad completa hasta evidencia. No reabrir decisiones acordadas sin nueva evidencia material.
+- Herramientas: GitHub lectura/comentario operativos; SentinelX, MCPENROUZ, EXZA, Desktop Commander, Cloudflare y Runpod visibles, permisos/sesiones/cuotas remotas no verificados. Sin cambios de producto, ramas, worktrees, servidores, instalaciones, compras ni MAIN; sin publicación en #415 ni issues nuevos.
+- Siguiente acción: esperar encargo explícito de FER; revisión independiente y doble ACK antes de freeze, autorización separada de implementación y recursos. Verificar HEAD y compatibilidad exactos al retomar. Una sola ronda cerrada.
