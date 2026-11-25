@@ -16,3 +16,9 @@ Estado inicial: candidato recibido, revisión independiente y doble ACK pendient
 
 ## Regla de cierre práctico
 Una sola ronda por especialista, máximo cinco hallazgos accionables. Clasificar: BLOQUEANTE (impide el slice o vulnera un invariante), NECESARIO (tarea del slice), DIFERIBLE (backlog). Si no hay bloqueo, declarar ACK técnico sin inventar mejoras. No reabrir acuerdos sin evidencia material. Archi consolida duplicidades; FER decide y Work/Codex revisan una vez el candidato. Solo nuevas evidencias materiales justifican otra ronda. Priorizar un slice real y ajustar arquitectura con resultados, no perfección teórica.
+
+## Propuesta organizativa de FER para la respuesta conjunta a JM (25/11/2026)
+Pendiente de comunicar y consensuar con JM: durante la etapa inicial de CORE V2, proponer que JM lidere el mantenimiento de MAIN V1 y sus LAB, incluyendo mejoras compatibles que no alteren contratos ni arquitectura compartida. FER y sus especialistas concentrarán el esfuerzo en construir y estabilizar CORE V2 aislado y en consolidar el piloto BRAIN. Coordinar P0, dependencias compartidas, reutilización de componentes y cambios transversales; no implica transferir unilateralmente permisos, ownership ni autorización de despliegue. Invitar a JM a participar en BRAIN cuando la metodología esté madura y ambos lo acuerden; no restringir su acceso actual a la organización ni al producto. Incorporar esta propuesta a la respuesta final de FER a Montara #415, tras la revisión prevista, sin publicarla allí todavía.
+
+## Primer checkpoint del piloto
+Archi-001 y Eugenia-001 completaron una ronda con ACK técnico y cero bloqueantes; informes y relevos en sus rutas individuales. No repetir su revisión. Pendiente completar perspectivas restantes y auditoría independiente, consolidar propuestas y obtener acuerdos humanos. Sin implementación autorizada.
