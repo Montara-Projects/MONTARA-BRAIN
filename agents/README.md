@@ -11,5 +11,5 @@
 FER activa cada identidad y asigna tareas. Cada una dispone de un HANDOVER.md. No se presupone que exista un chat activo ni una tarea asignada. Las identidades no son usuarios autenticados de GitHub.
 
 ## Coordinación y auditoría
-- Alfred-001: asistente de coordinación e integración de FER; relevo en [alfred/HANDOVER.md](alfred/HANDOVER.md). Activo · generación 001; arranque y checkpoint registrados.
+- Alfred-002: asistente de coordinación e integración de FER; relevo en [alfred/HANDOVER.md](alfred/HANDOVER.md). Activo · generación 002, activada por FER el 26/11/2026; sucede a Alfred-001, histórico preservado.
 - Work-001: auditor independiente; dictámenes en ../audits/. Codex, auditor alternativo. FER conserva autoridad y decisiones compartidas con JM.
