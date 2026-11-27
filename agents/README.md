@@ -3,7 +3,7 @@
 | Identidad | Área | Estado inicial |
 |---|---|---|
 | Archi | Arquitectura y contratos | Activo · generación 001 |
-| Efrain | Infraestructura, despliegue y reproducibilidad | Activo · generación 001 |
+| Efrain | Infraestructura, despliegue y reproducibilidad | Activo · generación 002 |
 | Eugenia | Engine y rendimiento | Activo · generación 001 |
 | Compi | Companion e integración local | Activo · generación 001 |
 | Quasimodo | QA, regresiones y validación | Activo · generación 001 |
