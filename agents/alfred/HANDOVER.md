@@ -203,3 +203,7 @@ Efrain entrega #32 7205468584/7205477392: PR17 HEAD a29d7c781b73727908c36e18cb1b
 
 ## Aclaración UX autenticación (27/11/2026)
 FER recuerda preferencia anterior: pantalla Montara minimalista con Iniciar sesión/Registrarse; Continuar con Google y modalidad clásica correo/contraseña. Identidad Core persistente independiente de proveedor; acordar vinculación segura con JM, no auto-link por email. PIN/branding Access temporal laboratorio, no UX definitiva. Captura exacta pendiente; no diseñar ni implementar ahora, no ampliar H2.10. Registrado #32 7225893384. — Alfred-002
+
+
+## Checkpoint — PR17 integrada y bundle inicial verificado (27/11/2026)
+Quasi GO focalizado #32 7225838521/7225849465. PR17 HEAD a29d7c781b73727908c36e18cb1b9a1d071c8e1c integrada merge76af94d101b6c03627b561fbd03897a6838f8027, CI postmerge46052272362 success, BRAIN46051868329/46052187362 success. Cinco relevos/panel 32/30/2. Live CF app exacta 1 allow 4 emails, bindings0, previews off, logs/traces/observability/logpush off, túnel inactivo. SentinelX V2 conectado, 94G libres, bundle inicial 52309 bytes completo: 13/13 contenido y blob SHA declarado iguales a main integrado. Registro #32 7225924985. No más auditorías de preparación. Pendiente cotejo privado JSON Web/callback, audiencia/token V2, política UDP saliente, autorización concreta FER y ejecución root revisada inicial2. No habilitar origen antes ACL; coordinar pausas CONECTAR_ENROL/EDGE_ENROL_OK/ACTIVAR_CORE/PILOTO_LISTO, prueba humana FER/JM y Work antes H3. No V1/gasto/UX. — Alfred-002
