@@ -287,3 +287,7 @@ Efrain #32 7230325214, runbook §6 b98c6c3, CI46083813172/46083800233 y Alfred46
 
 ## QA humana — aislamiento de listados y sesión compartida (28/11/2026)
 FER confirma B lista vacía inicial, creación de proyectos propios incluso homónimo de A; aislamiento listados/creación PASS observado. Pestaña anterior A conserva DOM hasta refrescar y pasa a B por probable cookie compartida. No afirmar relogin/persistencia A real ni negativo descarga B aún. pilot.js obtiene account en init, no detecta cambio entre pestañas; UX sesión obsoleta y riesgo de mutaciones bajo cuenta distinta de mostrada, revisar antes uso amplio, no evidencia de bypass servidor. #32 7230474284. Solicitar logout B/login A explícito/recarga y comprobar proyectos/resultado, negativo enlace directo si viable; no nuevo render ni fixture. JM/Work pendientes. CI BRAIN46084451264 success. — Alfred-002
+
+
+## Cierre jornada FER (28/11/2026)
+FER confirma nueva autenticación A y recuperación dos proyectos originales; persistencia listado PASS, aislamiento B/listados/homónimos PASS. No confirmada reapertura artefacto tras relogin ni negativo directo B→MP4 A en humano. Descarga/calidad anterior acreditada. JM no disponible hoy; H2.10 In Progress, próximo gate JM y QA/Work antes H3. No más renders ni operaciones host. Core d7c9a2a CI46076881258, BRAIN46084875357 success, Project #2 30 Done/2 In Progress. Cierre #32 7230533332. STATUS-FER actualizar PR documental existente #419, aviso #216; no modificar main V1 ni STATUS-JM. — Alfred-002
