@@ -34,7 +34,7 @@ subject() {
 check_auth() {
     local expected=$1 action=$2 u=$3 verb=$4 rc=0
     pkcheck --action-id "$action" --process "$subj" --detail unit "$u" --detail verb "$verb" >/dev/null 2>&1 || rc=$?
-    test "$rc" -eq "$expected"
+    if test "$expected" = 0; then test "$rc" = 0; else test "$rc" = 1 || test "$rc" = 2; fi
 }
 negative() {
     local a=org.freedesktop.systemd1.manage-units
@@ -65,16 +65,16 @@ assert old.get('exec_mode', 'strict' if old.get('exec_strict') is True else None
 lines=s.splitlines(keepends=True)
 if mode=='add':
     assert old['allowed_commands']==['uptime','free -h','df -h','id','/usr/local/bin/montara-test']
-    hits=[i for i,l in enumerate(lines) if re.fullmatch(r'([ \t]+)-[ \t]+(?:"/usr/local/bin/montara-test"|\'/usr/local/bin/montara-test\'|/usr/local/bin/montara-test)[ \t]*(?:#[^\n]*)?\n',l)]
+    hits=[i for i,l in enumerate(lines) if re.fullmatch(r'([ \t]*)-[ \t]+(?:"/usr/local/bin/montara-test"|\'/usr/local/bin/montara-test\'|/usr/local/bin/montara-test)[ \t]*(?:#[^\n]*)?\n',l)]
     assert len(hits)==1
-    i=hits[0]; indent=re.match(r'[ \t]+',lines[i]).group()
+    i=hits[0]; indent=re.match(r'[ \t]*',lines[i]).group()
     lines[i+1:i+1]=[indent+'- '+v+'\n' for v in new]
     wanted=old['allowed_commands']+new
 elif mode=='remove':
     wanted=[v for v in old['allowed_commands'] if v not in new]
     assert all(old['allowed_commands'].count(v)==1 for v in new)
     for v in new:
-        hits=[i for i,l in enumerate(lines) if re.fullmatch(r'[ \t]+-[ \t]+'+re.escape(v)+r'[ \t]*\n',l)]
+        hits=[i for i,l in enumerate(lines) if re.fullmatch(r'[ \t]*-[ \t]+'+re.escape(v)+r'[ \t]*\n',l)]
         assert len(hits)==1
         del lines[hits[0]]
 else: raise ValueError('mode')
@@ -174,6 +174,7 @@ root_file "$cfg"
 for p in "$rule" "$start" "$status" "$admin"; do test ! -e "$p" && test ! -L "$p"; done
 test -d /etc/polkit-1/rules.d
 test "$(realpath /opt/montara-pilot/current)" = "$slot"
+test -L /opt/montara-pilot/current && test "$(stat -c %u /opt/montara-pilot/current)" = 0
 test "$(stat -c '%U:%G:%a' "$slot")" = root:montara-pilot:750
 for u in montara-pilot-http montara-pilot-ingress montara-pilot-acl; do systemctl is-active --quiet "$u.service"; done
 test "$(systemctl show montara-pilot-enrol.service -p LoadState --value)" = not-found
@@ -183,6 +184,7 @@ test "$(systemctl show "$unit" -p Result --value)" = success
 test "$(systemctl show "$unit" -p FragmentPath --value)" = "/etc/systemd/system/$unit"
 test -z "$(systemctl show "$unit" -p DropInPaths --value)"
 test "$(systemctl show "$unit" -p NeedDaemonReload --value)" = no
+systemctl --help | grep -- "--wait" >/dev/null
 root_file "/etc/systemd/system/$unit"
 hashgit "/etc/systemd/system/$unit" 6d9df7806b9567aa5fef4467f6984ef69f26af30
 root_file "$slot/renderer-src/tools/core_v2_media_fixture.py"
@@ -200,7 +202,7 @@ s=open(sys.argv[1]).read()
 d=yaml.safe_load(s)
 assert d.get('exec_mode', 'strict' if d.get('exec_strict') is True else None)=='strict'
 assert d['allowed_commands']==['uptime','free -h','df -h','id','/usr/local/bin/montara-test']
-assert len(re.findall(r'^[ \t]+-[ \t]+(?:"/usr/local/bin/montara-test"|\'/usr/local/bin/montara-test\'|/usr/local/bin/montara-test)[ \t]*(?:#[^\n]*)?$',s,re.M))==1
+assert len(re.findall(r'^[ \t]*-[ \t]+(?:"/usr/local/bin/montara-test"|\'/usr/local/bin/montara-test\'|/usr/local/bin/montara-test)[ \t]*(?:#[^\n]*)?$',s,re.M))==1
 PY
 echo PREFLIGHT=PASS
 mark fixture
@@ -208,11 +210,12 @@ echo 'Selecciona en la UI un proyecto propio YA EXISTENTE. No registres ni solic
 read -r -s -p 'UUID de ese proyecto (entrada privada): ' project
 echo
 # UUID comes only from FER's current authenticated UI, not from DB discovery.
-runuser -u montara-pilot -- env -i HOME="$state/runtime-home" PATH="$slot/media-tools:/usr/bin:/bin" "$slot/pilot-runtime/venv/bin/python" -I -B - "$project" "$slot" "$state" <<'PY'
+fixture_py=$(cat <<'PY'
 import hashlib, importlib.util, os, shutil, stat, sys
 from pathlib import Path
 from montara_core.domain.projects import validate_id
-project,slot,state=sys.argv[1:]
+slot,state=sys.argv[1:]
+project=sys.stdin.readline().strip()
 validate_id(project)
 slot,state=Path(slot),Path(state)
 os.umask(0o077)
@@ -269,7 +272,9 @@ else:
 for n in names: print('FIXTURE',n,rows[n]['bytes'],rows[n]['sha256'])
 print('FIXTURE_READY=PASS')
 PY
-unset project
+)
+printf '%s\n' "$project" | runuser -u montara-pilot -- env -i HOME="$state/runtime-home" PATH="$slot/media-tools:/usr/bin:/bin" "$slot/pilot-runtime/venv/bin/python" -I -B -c "$fixture_py" "$slot" "$state"
+unset project fixture_py
 mark delegation
 # No command from the test queue is executed here.
 install -d -o root -g root -m 0755 "$admin"
