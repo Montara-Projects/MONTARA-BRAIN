@@ -24,11 +24,11 @@ hashgit() { test "$(git hash-object --no-filters "$1")" = "$2"; }
 root_file() { test -f "$1" && test ! -L "$1" && test "$(stat -c %u "$1")" = 0 && test "$((8#$(stat -c %a "$1") & 022))" = 0; }
 # Verify an actual agent process subject, queried by root, no interaction.
 subject() {
-    pid=$(systemctl show "$agent" -p MainPID --value)
-    uid=$(id -u sentinelx)
-    test "$pid" -gt 1 && test "$uid" -ne 0
-    test "$(ps -o euid= -p "$pid" | tr -d ' ')" = "$uid"
-    ticks=$(/usr/bin/python3 -I -c 'import sys; print(open("/proc/"+sys.argv[1]+"/stat").read().rsplit(")",1)[1].split()[19])' "$pid")
+    pid=$(systemctl show "$agent" -p MainPID --value) || return 1
+    uid=$(id -u sentinelx) || return 1
+    test "$pid" -gt 1 && test "$uid" -ne 0 || return 1
+    test "$(ps -o euid= -p "$pid" | tr -d ' ')" = "$uid" || return 1
+    ticks=$(/usr/bin/python3 -I -c 'import sys; print(open("/proc/"+sys.argv[1]+"/stat").read().rsplit(")",1)[1].split()[19])' "$pid") || return 1
     subj="$pid,$ticks,$uid"
 }
 check_auth() {
@@ -290,7 +290,7 @@ export PATH=/usr/bin:/bin LC_ALL=C
 unset BASH_ENV ENV PYTHONPATH PYTHONHOME
 test "$#" = 0
 test "$(id -un)" = sentinelx
-exec systemctl show montara-pilot-worker.service -p ActiveState -p SubState -p Result -p ExecMainCode -p ExecMainStatus -p MainPID
+exec /usr/bin/env -i PATH=/usr/bin:/bin LC_ALL=C /usr/bin/systemctl --system show montara-pilot-worker.service -p ActiveState -p SubState -p Result -p ExecMainCode -p ExecMainStatus -p MainPID
 STATUS
 cat > "$start" <<'START'
 #!/bin/bash
@@ -299,9 +299,10 @@ export PATH=/usr/bin:/bin LC_ALL=C
 test "$#" = 0
 test "$(id -un)" = sentinelx
 unit=montara-pilot-worker.service
+systemctl() { /usr/bin/env -i PATH=/usr/bin:/bin LC_ALL=C /usr/bin/systemctl --system "$@"; }
 exec 9</var/lib/montara-worker-delegation/worker.lock
 flock -n 9 || { echo WORKER_INVOCATION_BUSY; exit 3; }
-test "$(git hash-object --no-filters "/etc/systemd/system/$unit")" = 6d9df7806b9567aa5fef4467f6984ef69f26af30
+test "$(/usr/bin/env -i PATH=/usr/bin:/bin LC_ALL=C /usr/bin/git hash-object --no-filters "/etc/systemd/system/$unit")" = 6d9df7806b9567aa5fef4467f6984ef69f26af30
 test "$(systemctl show "$unit" -p FragmentPath --value)" = "/etc/systemd/system/$unit"
 test -z "$(systemctl show "$unit" -p DropInPaths --value)"
 test "$(systemctl show "$unit" -p NeedDaemonReload --value)" = no
@@ -309,7 +310,7 @@ test "$(systemctl show "$unit" -p ActiveState --value)" = inactive
 test "$(systemctl show "$unit" -p MainPID --value)" = 0
 test "$(systemctl show "$unit" -p Result --value)" = success
 rc=0
-timeout 650s systemctl --no-ask-password --wait start "$unit" >/dev/null 2>&1 || rc=$?
+timeout 650s /usr/bin/env -i PATH=/usr/bin:/bin LC_ALL=C /usr/bin/systemctl --system --no-ask-password --wait start "$unit" >/dev/null 2>&1 || rc=$?
 /usr/local/bin/montara-pilot-worker-status
 printf 'WORKER_SYSTEMCTL_RC=%s\n' "$rc"
 test "$rc" = 0
@@ -326,7 +327,7 @@ bash -n "$start"; bash -n "$status"
 runuser -u sentinelx -- "$status"
 if runuser -u sentinelx -- "$start" unexpected >/dev/null 2>&1; then exit 1; fi
 if runuser -u sentinelx -- "$status" unexpected >/dev/null 2>&1; then exit 1; fi
-cat > "$rule" <<'RULE'
+cat > "$admin/private/worker.rules" <<'RULE'
 polkit.addRule(function(action, subject) {
     if (subject.user === "sentinelx" &&
         action.id === "org.freedesktop.systemd1.manage-units" &&
@@ -336,7 +337,7 @@ polkit.addRule(function(action, subject) {
     }
 });
 RULE
-chmod 0644 "$rule"
+install -o root -g root -m 0644 "$admin/private/worker.rules" "$rule"
 root_file "$rule"
 for n in {1..15}; do
     if check_auth 0 org.freedesktop.systemd1.manage-units "$unit" start; then break; fi
@@ -345,6 +346,22 @@ done
 check_auth 0 org.freedesktop.systemd1.manage-units "$unit" start
 negative
 echo POLKIT_EXACT_START_AND_NEGATIVES=PASS
+# Prove revocability on the actual policy without starting or stopping a unit.
+rm -f -- "$rule"
+for n in {1..15}; do
+    if check_auth 1 org.freedesktop.systemd1.manage-units "$unit" start; then break; fi
+    sleep 1
+done
+check_auth 1 org.freedesktop.systemd1.manage-units "$unit" start
+negative
+echo POLKIT_REVOCATION_TEST=PASS
+install -o root -g root -m 0644 "$admin/private/worker.rules" "$rule"
+for n in {1..15}; do
+    if check_auth 0 org.freedesktop.systemd1.manage-units "$unit" start; then break; fi
+    sleep 1
+done
+check_auth 0 org.freedesktop.systemd1.manage-units "$unit" start
+negative
 mark reconnect
 cfg_changed=1
 edit_cfg add
