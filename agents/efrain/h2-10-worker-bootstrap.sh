@@ -27,7 +27,7 @@ subject() {
     pid=$(systemctl show "$agent" -p MainPID --value)
     uid=$(id -u sentinelx)
     test "$pid" -gt 1 && test "$uid" -ne 0
-    test "$(stat -c %u "/proc/$pid")" = "$uid"
+    test "$(ps -o euid= -p "$pid" | tr -d ' ')" = "$uid"
     ticks=$(/usr/bin/python3 -I -c 'import sys; print(open("/proc/"+sys.argv[1]+"/stat").read().rsplit(")",1)[1].split()[19])' "$pid")
     subj="$pid,$ticks,$uid"
 }
@@ -61,7 +61,7 @@ s=raw.decode('utf-8')
 old=yaml.safe_load(s)
 assert isinstance(old,dict) and isinstance(old['allowed_commands'],list)
 assert all(isinstance(x,str) for x in old['allowed_commands'])
-assert old.get('exec_mode')=='strict'
+assert old.get('exec_mode', 'strict' if old.get('exec_strict') is True else None)=='strict'
 lines=s.splitlines(keepends=True)
 if mode=='add':
     assert old['allowed_commands']==['uptime','free -h','df -h','id','/usr/local/bin/montara-test']
@@ -96,14 +96,17 @@ PY
 }
 restore_cfg() {
     # Bootstrap rollback only: don't clobber unrelated later changes.
-    if test -f "$admin/config.after"; then
-        if cmp -s "$cfg" "$admin/config.after"; then
-            cp -a "$admin/config.before" "$cfg.rollback-montara"
-            mv -T "$cfg.rollback-montara" "$cfg"
-        elif ! cmp -s "$cfg" "$admin/config.before"; then
+    if test -f "$admin/private/config.after"; then
+        if cmp -s "$cfg" "$admin/private/config.after"; then
+            local tmp
+            tmp=$(mktemp -d "$(dirname "$cfg")/.rollback-montara.XXXXXXXX")
+            cp -a "$admin/private/config.before" "$tmp/config"
+            mv -T "$tmp/config" "$cfg"
+            rmdir "$tmp"
+        elif ! cmp -s "$cfg" "$admin/private/config.before"; then
             edit_cfg remove || return 1
         fi
-    elif ! cmp -s "$cfg" "$admin/config.before"; then
+    elif ! cmp -s "$cfg" "$admin/private/config.before"; then
         edit_cfg remove || return 1
     fi
 }
@@ -116,7 +119,13 @@ rollback() {
         systemctl is-active --quiet "$agent" || fail=1
     fi
     rm -f -- "$start" "$status" || fail=1
-    if subject && check_auth 1 org.freedesktop.systemd1.manage-units "$unit" start; then
+    if subject; then
+        for n in {1..15}; do
+            if check_auth 1 org.freedesktop.systemd1.manage-units "$unit" start; then break; fi
+            sleep 1
+        done
+    else fail=1; fi
+    if test "$fail" = 0 && check_auth 1 org.freedesktop.systemd1.manage-units "$unit" start; then
         echo WORKER_GRANT_REVOKED=PASS
     else fail=1; fi
     if test "$fail" = 0; then echo BOOTSTRAP_ROLLBACK=PASS; else echo BOOTSTRAP_ROLLBACK=REVIEW_REQUIRED; fi
@@ -137,7 +146,7 @@ if test "$mode" = revoke; then
     mark revoke
     root_file "$admin/bootstrap.sh"
     # Only our files; preserve other configuration and all pilot data.
-    test -f "$admin/config.before"
+    test -f "$admin/private/config.before"
     rm -f -- "$rule"
     subject
     for n in {1..15}; do
@@ -176,6 +185,8 @@ test -z "$(systemctl show "$unit" -p DropInPaths --value)"
 test "$(systemctl show "$unit" -p NeedDaemonReload --value)" = no
 root_file "/etc/systemd/system/$unit"
 hashgit "/etc/systemd/system/$unit" 6d9df7806b9567aa5fef4467f6984ef69f26af30
+root_file "$slot/renderer-src/tools/core_v2_media_fixture.py"
+root_file "$slot/renderer-src/tests/fixtures/core-v2/stage-recipe-v1.json"
 hashgit "$slot/renderer-src/tools/core_v2_media_fixture.py" d2c8e42b461868d11ead0c306430ecbad45bff64
 hashgit "$slot/renderer-src/tests/fixtures/core-v2/stage-recipe-v1.json" c02fadd61275cfbab1a1727eb4e551f4790e1506
 printf '%s  %s\n' ed16af623947494a72e284b6eb8ff225f2da22b38b5d5069c2fd4b4ba3384e41 "$slot/ffmpeg-root/usr/bin/ffmpeg" 272f6ebc634a63d9c8b4ca68e964119d980f25154e5aa2c35e5487da48e9a58f "$slot/ffmpeg-root/usr/bin/ffprobe" | sha256sum -c --status
@@ -187,7 +198,7 @@ negative
 import sys,yaml,re
 s=open(sys.argv[1]).read()
 d=yaml.safe_load(s)
-assert d.get('exec_mode')=='strict'
+assert d.get('exec_mode', 'strict' if d.get('exec_strict') is True else None)=='strict'
 assert d['allowed_commands']==['uptime','free -h','df -h','id','/usr/local/bin/montara-test']
 assert len(re.findall(r'^[ \t]+-[ \t]+(?:"/usr/local/bin/montara-test"|\'/usr/local/bin/montara-test\'|/usr/local/bin/montara-test)[ \t]*(?:#[^\n]*)?$',s,re.M))==1
 PY
@@ -262,8 +273,8 @@ unset project
 mark delegation
 # No command from the test queue is executed here.
 install -d -o root -g root -m 0755 "$admin"
-cp -a "$cfg" "$admin/config.before"
-chmod 0600 "$admin/config.before"
+install -d -o root -g root -m 0700 "$admin/private"
+cp -a "$cfg" "$admin/private/config.before"
 install -o root -g root -m 0700 "$0" "$admin/bootstrap.sh"
 install -o root -g root -m 0444 /dev/null "$admin/worker.lock"
 armed=1
@@ -271,6 +282,7 @@ cat > "$status" <<'STATUS'
 #!/bin/bash
 set -euo pipefail
 export PATH=/usr/bin:/bin LC_ALL=C
+unset BASH_ENV ENV PYTHONPATH PYTHONHOME
 test "$#" = 0
 test "$(id -un)" = sentinelx
 exec systemctl show montara-pilot-worker.service -p ActiveState -p SubState -p Result -p ExecMainCode -p ExecMainStatus -p MainPID
@@ -331,8 +343,7 @@ echo POLKIT_EXACT_START_AND_NEGATIVES=PASS
 mark reconnect
 cfg_changed=1
 edit_cfg add
-cp -a "$cfg" "$admin/config.after"
-chmod 0600 "$admin/config.after"
+cp -a "$cfg" "$admin/private/config.after"
 systemctl restart "$agent" >/dev/null 2>&1
 systemctl is-active --quiet "$agent"
 subject
