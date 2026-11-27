@@ -207,3 +207,7 @@ FER recuerda preferencia anterior: pantalla Montara minimalista con Iniciar sesi
 
 ## Checkpoint — PR17 integrada y bundle inicial verificado (27/11/2026)
 Quasi GO focalizado #32 7225838521/7225849465. PR17 HEAD a29d7c781b73727908c36e18cb1b9a1d071c8e1c integrada merge76af94d101b6c03627b561fbd03897a6838f8027, CI postmerge46052272362 success, BRAIN46051868329/46052187362 success. Cinco relevos/panel 32/30/2. Live CF app exacta 1 allow 4 emails, bindings0, previews off, logs/traces/observability/logpush off, túnel inactivo. SentinelX V2 conectado, 94G libres, bundle inicial 52309 bytes completo: 13/13 contenido y blob SHA declarado iguales a main integrado. Registro #32 7225924985. No más auditorías de preparación. Pendiente cotejo privado JSON Web/callback, audiencia/token V2, política UDP saliente, autorización concreta FER y ejecución root revisada inicial2. No habilitar origen antes ACL; coordinar pausas CONECTAR_ENROL/EDGE_ENROL_OK/ACTIVAR_CORE/PILOTO_LISTO, prueba humana FER/JM y Work antes H3. No V1/gasto/UX. — Alfred-002
+
+
+## Incidencia conector local Windows (27/11/2026)
+FER ejecutó instalador/comando del portal en Windows, captura y GET live V2 healthy/4 conexiones y única réplica windows_amd64 2026.11.2. Worker bindings0, captura 0 rutas. No conectar origen ni ejecutar root Contabo hasta retirar réplica local comprobando token V2 sin imprimirlo; verificar 0 conexiones, rotar sólo token V2 e introducir nuevo por prompt privado en Contabo. Otro túnel figura down, causalidad no acreditada, no intervenir. Registro #32 7226228276. — Alfred-002
