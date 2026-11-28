@@ -14,6 +14,10 @@ test "$(systemctl show "$unit" -p NeedDaemonReload --value)" = no
 test "$(systemctl show "$unit" -p ActiveState --value)" = inactive
 test "$(systemctl show "$unit" -p MainPID --value)" = 0
 test "$(systemctl show "$unit" -p Result --value)" = success
+# Do not accept work during a closed-admission maintenance window.
+for u in montara-pilot-http.service montara-pilot-ingress.service montara-pilot-acl.service; do
+    test "$(systemctl show "$u" -p ActiveState --value)" = active
+done
 rc=0
 timeout 650s /usr/bin/env -i PATH=/usr/bin:/bin LC_ALL=C /usr/bin/systemctl --system --no-ask-password --wait start "$unit" >/dev/null 2>&1 || rc=$?
 # One coherent snapshot, not six independent queries after GC.
