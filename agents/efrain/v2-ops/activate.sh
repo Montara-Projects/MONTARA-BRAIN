@@ -109,7 +109,7 @@ rollback() {
     if test "$fail" = 0; then echo OPS_ROLLBACK=PASS; else echo OPS_ROLLBACK_REVIEW_REQUIRED; fi
 }
 finish() {
-    local rc=$?
+    local rc=${1:-$?}
     trap - EXIT ERR
     if test "$rc" != 0; then
         echo "OPS_FAILED_PHASE=$phase RC=$rc"
@@ -123,6 +123,8 @@ if test "$mode" = revoke; then
     mark revoke
     rootfile "$admin/activate.sh"
     revoke_grant
+    exec 9<"$lock"
+    flock -n 9 || { echo OPS_GRANT_REVOKED_BUT_OPERATION_BUSY; exit 1; }
     edit_cfg remove
     systemctl restart "$agent" >/dev/null 2>&1
     systemctl is-active --quiet "$agent"
@@ -136,8 +138,8 @@ test "$mode" = install
 rootdir "$D"
 rootfile "$cfg"; rootfile "$worker"; rootfile "$lock"; rootdir "$(dirname "$lock")"
 for p in "$admin" "$backup" "$policy" "$helper" "$wrapper" "$bank"; do test ! -e "$p" && test ! -L "$p"; done
-hashgit "$D/ops.py" 52db75fa2b2cf54ed79c33f4a2aa7c3498c591f0
-hashgit "$D/worker-start.sh" 40cdfce879225ef395de61a7062fc83ea55e5f31
+hashgit "$D/ops.py" 4d377f3f96227683ee357edbbdfc995dae3eacf9
+hashgit "$D/worker-start.sh" 32936861f034b95d95a6a5479b10456799737676
 hashgit "$D/montara-v2-ops.sh" 2456351767d7a3356f18b30789fe691bf93d43de
 hashgit "$D/sudoers" bc53e09a71130451fa2c93bf98be051b084f1609
 bash -n "$D/worker-start.sh"; bash -n "$D/montara-v2-ops.sh"
@@ -193,7 +195,7 @@ PY
 # Copy only already verified synthetic bytes under the dedicated nonroot UID.
 mark fixture_bank
 T=$(mktemp -d /root/montara-bank.XXXXXXXX)
-trap 'rm -rf -- "$T"; finish' EXIT
+trap 'rc=$?; rm -rf -- "$T"; finish "$rc"' EXIT
 for line in \
  'camera-a.mp4 63410 f290175c1fb7f2587baf6e535b0f6adde0ad78b2d31ec250ae027a0590abfbc7' \
  'camera-b.mp4 63194 2817a6ab4b4833f40a5eb9534a90c2c173d3affe408045594f54daa09d87674d' \
@@ -246,6 +248,13 @@ visudo -c >/dev/null 2>&1
 for a in status start stop restart backup; do permit "$a"; done
 negative
 echo EXACT_SUDO_SCOPE=PASS
+revoke_grant
+negative
+echo EXACT_SUDO_REVOCATION=PASS
+install -o root -g root -m 0440 "$D/sudoers" "$policy"
+visudo -c >/dev/null 2>&1
+for a in status start stop restart backup; do permit "$a"; done
+negative
 changed_cfg=1
 edit_cfg add
 systemctl restart "$agent" >/dev/null 2>&1
