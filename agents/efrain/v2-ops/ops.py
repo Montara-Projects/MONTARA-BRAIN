@@ -9,6 +9,7 @@ from pathlib import Path
 import pwd
 import re
 import shutil
+import sqlite3
 import stat
 import subprocess
 import sys
@@ -177,7 +178,8 @@ def create_backup(state, dest, uid, slot):
     require(len(existing)<MAX_BACKUPS,"BACKUP_RETENTION_LIMIT")
     require(all(p.is_dir() and not p.is_symlink() and re.fullmatch(r"backup-[0-9]+-[a-z0-9_]+",p.name) for p in existing),"BACKUP_STORE_UNEXPECTED")
     entries,total=inventory(state,uid)
-    require(shutil.disk_usage(dest).free>=total+2*GIB+len(entries)*4096,"BACKUP_DISK_MARGIN")
+    db_bytes=sum(v[1] for k,v in entries.items() if k in ('db/core.sqlite','db/core.sqlite-wal','db/core.sqlite-shm','db/core.sqlite-journal'))
+    require(shutil.disk_usage(dest).free>=total+db_bytes+2*GIB+len(entries)*4096,"BACKUP_DISK_MARGIN")
     tmp=Path(tempfile.mkdtemp(prefix=".partial-",dir=dest))
     published=False
     try:
@@ -198,6 +200,21 @@ def create_backup(state, dest, uid, slot):
                     with t.extractfile(m) as f:
                         require(hashlib.file_digest(f,"sha256").hexdigest()==digest,"ARCHIVE_DIGEST_MISMATCH")
             require(seen==set(entries),"ARCHIVE_INCOMPLETE")
+        # Check only a private scratch copy from the verified archive, never the live DB.
+        check=tmp/"db-check"
+        check.mkdir(mode=0o700)
+        with tarfile.open(arc,"r") as t:
+            for n in ("core.sqlite","core.sqlite-wal","core.sqlite-shm","core.sqlite-journal"):
+                rel="db/"+n
+                if rel in entries:
+                    require(entries[rel][0]=="file","DATABASE_MEMBER_INVALID")
+                    with t.extractfile(rel) as source, (check/n).open("xb") as target:
+                        shutil.copyfileobj(source,target)
+        with contextlib.closing(sqlite3.connect((check/"core.sqlite").as_uri()+"?mode=ro",uri=True)) as db:
+            require(db.execute("PRAGMA user_version").fetchone()==(5,),"BACKUP_SCHEMA_MISMATCH")
+            require(db.execute("PRAGMA quick_check").fetchall()==[("ok",)],"BACKUP_DB_CHECK_FAILED")
+            require(db.execute("PRAGMA foreign_key_check").fetchone() is None,"BACKUP_DB_FK_FAILED")
+        shutil.rmtree(check)
         require(inventory(state,uid)==(entries,total),"DATA_CHANGED_DURING_BACKUP")
         manifest={"format":1,"scope":"quiescent data only; no credentials; not a restore authorization",
                   "slot":str(slot.name),"bytes":total,"entries":len(entries),
