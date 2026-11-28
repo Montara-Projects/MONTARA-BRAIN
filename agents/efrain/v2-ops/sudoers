@@ -1,0 +1,3 @@
+# Exact commands and argument strings, not a shell or wildcard.
+Defaults:sentinelx env_reset
+sentinelx ALL=(root) NOPASSWD: NOSETENV: /usr/local/sbin/montara-v2-ops-root status, /usr/local/sbin/montara-v2-ops-root start, /usr/local/sbin/montara-v2-ops-root stop, /usr/local/sbin/montara-v2-ops-root restart, /usr/local/sbin/montara-v2-ops-root backup
