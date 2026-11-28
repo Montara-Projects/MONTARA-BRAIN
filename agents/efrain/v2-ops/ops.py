@@ -221,10 +221,15 @@ class Ops:
     def get(self,u):
         return props(command("/usr/bin/systemctl","--system","show","--all",u,*("-p"+p for p in PROPS)))
 
+    def enrol_state(self):
+        return command("/usr/bin/systemctl","--system","show",ENROL,"-p","LoadState","--value").decode().strip()
+
     def report(self):
         # No PID, paths, UUID, config, journal or tokens returned.
-        return {u: {k:d[k] for k in ("LoadState","ActiveState","SubState","Result")}
-                for u in (*PINS,ENROL) for d in (self.get(u),)}
+        result={u: {k:d[k] for k in ("LoadState","ActiveState","SubState","Result")}
+                for u in PINS for d in (self.get(u),)}
+        result[ENROL]={"LoadState":self.enrol_state()}
+        return result
 
     def preflight(self):
         for u,digest in PINS.items():
@@ -234,7 +239,7 @@ class Ops:
             require(d["Job"] in ("","0"),"UNIT_JOB_PENDING")
             require(git_blob(Path(d["FragmentPath"]))==digest,"UNIT_HASH_DRIFT")
         require(root_file(Path(DROP)).read_bytes()==DROP_BYTES,"DROPIN_DRIFT")
-        require(self.get(ENROL)["LoadState"]=="not-found","ENROLMENT_ACTIVE_OR_INSTALLED")
+        require(self.enrol_state()=="not-found","ENROLMENT_ACTIVE_OR_INSTALLED")
         require(self.get(ACL)["ActiveState"]=="active","ACL_NOT_ACTIVE")
         validate_acl(json.loads(command("/usr/sbin/nft","-j","-n","list","table","inet","montara_pilot_v2"))["nftables"],
                      pwd.getpwnam("montara-pilot-ingress").pw_uid)
