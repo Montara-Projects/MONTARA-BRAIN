@@ -3,6 +3,7 @@ import copy
 import os
 from pathlib import Path
 import tempfile
+import sqlite3
 import unittest
 from unittest.mock import patch
 import ops
@@ -108,11 +109,24 @@ class Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             p=Path(t); state=p/"state"; dest=p/"backups"; state.mkdir(); dest.mkdir(mode=0o700)
             for n in ("db","originals","attempts","artifacts"): (state/n).mkdir(mode=0o700)
-            f=state/"db/core.sqlite"; f.write_bytes(b"synthetic not real sqlite"); f.chmod(0o600)
+            f=state/"db/core.sqlite"
+            with sqlite3.connect(f) as db:
+                db.execute("PRAGMA user_version=5")
+                db.execute("CREATE TABLE sample(id INTEGER PRIMARY KEY)")
+                db.execute("INSERT INTO sample VALUES(1)")
+            db.close(); f.chmod(0o600)
             with patch.object(ops,"root_dir"),patch.object(ops.shutil,"disk_usage",return_value=type("D",(),{"free":10*ops.GIB})()):
                 for _ in range(2): self.assertEqual(ops.create_backup(state,dest,os.getuid(),ops.SLOT)["backup"],"VERIFIED_LOCAL")
                 with self.assertRaisesRegex(ops.Refused,"RETENTION"): ops.create_backup(state,dest,os.getuid(),ops.SLOT)
             self.assertEqual(len(list(dest.iterdir())),2)
+    def test_backup_invalid_db_not_published(self):
+        with tempfile.TemporaryDirectory() as t:
+            p=Path(t); state=p/"state"; dest=p/"backups"; state.mkdir(); dest.mkdir(mode=0o700)
+            for n in ("db","originals","attempts","artifacts"): (state/n).mkdir(mode=0o700)
+            f=state/"db/core.sqlite"; f.write_bytes(b"invalid db"); f.chmod(0o600)
+            with patch.object(ops,"root_dir"),patch.object(ops.shutil,"disk_usage",return_value=type("D",(),{"free":10*ops.GIB})()):
+                with self.assertRaises((ops.Refused,sqlite3.DatabaseError)): ops.create_backup(state,dest,os.getuid(),ops.SLOT)
+            self.assertEqual(list(dest.iterdir()),[])
     def test_backup_symlink_external_hardlink_and_size(self):
         with tempfile.TemporaryDirectory() as t:
             p=Path(t)
