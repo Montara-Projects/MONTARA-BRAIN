@@ -219,7 +219,7 @@ def create_backup(state, dest, uid, slot):
 
 class Ops:
     def get(self,u):
-        return props(command("/usr/bin/systemctl","--system","show",u,*("-p"+p for p in PROPS)))
+        return props(command("/usr/bin/systemctl","--system","show","--all",u,*("-p"+p for p in PROPS)))
 
     def report(self):
         # No PID, paths, UUID, config, journal or tokens returned.
@@ -277,7 +277,7 @@ class Ops:
     def listeners(self, running):
         raw=command("/usr/bin/ss","-H","-ltn").decode()
         found=[l.split()[3] for l in raw.splitlines() if l.split()[3].rsplit(":",1)[-1] in ("8080","20246")]
-        require(set(found)==({"127.0.0.1:8080","127.0.0.1:20246"} if running else set()),"LISTENER_DRIFT")
+        require(sorted(found)==(sorted(["127.0.0.1:8080","127.0.0.1:20246"]) if running else []),"LISTENER_DRIFT")
 
     def no_processes(self):
         # Only dedicated V2 UIDs. No output of PID/args.
